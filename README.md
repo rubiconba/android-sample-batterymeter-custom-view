@@ -6,7 +6,7 @@ Usage
 -----
 
 ```xml
-<com.mzukic.widget.battery.BatteryView
+<ba.rubicon.widget.battery.BatteryMeterView
             android:layout_width="200dp"
             android:id="@+id/battery_view"
             android:layout_height="90dp"
