@@ -17,7 +17,5 @@ Usage
 
 Screenshot States
 ---------------
-| Warning Level 30% | Charging | Charged 80% |
-| ------- | ------- | -------- | 
-| ![Battery Level 30%](https://i.imgur.com/V6SkQdb.png) | ![Battery is charging](https://i.imgur.com/KRG8GIC.png) | ![Battery charged 80%](https://i.imgur.com/aEH7QzF.png) | 
+![Battery](https://i.imgur.com/qs6tNlh.png)
 
