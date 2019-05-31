@@ -8,24 +8,11 @@
         android:layout_height="match_parent"
         tools:context="ba.rubicon.batteryview.MainActivity">
 
-    <EditText android:layout_width="wrap_content"
-              android:layout_gravity="bottom|center"
-              android:layout_marginBottom="100dp"
-              android:id="@+id/battery_value"
-              android:layout_height="wrap_content" android:hint="battery value"/>
-
-    <Button android:layout_width="wrap_content"
-            android:layout_gravity="bottom|center"
-            android:layout_marginBottom="20dp"
-            android:id="@+id/chargingButton"
-            android:text="toggle Charging"
-            android:layout_height="wrap_content"/>
-
     <ba.rubicon.widget.battery.BatteryMeterView
             android:layout_width="292dp"
             android:id="@+id/battery_view"
             android:layout_height="148dp"
-            app:battery_level="30"
+            app:battery_level="0"
             android:background="@android:color/transparent"
             app:normal_fill_color="@android:color/holo_green_dark"
             app:warning_fill_color="@android:color/darker_gray"
@@ -33,5 +20,5 @@
             app:charging_color="@android:color/holo_orange_dark"
             app:battery_head_color="@android:color/darker_gray"
             android:layout_gravity="center"
-            app:charging="true"/>
+            app:charging="false"/>
 </FrameLayout>

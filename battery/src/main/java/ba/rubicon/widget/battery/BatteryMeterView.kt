@@ -26,8 +26,6 @@ class BatteryMeterView @JvmOverloads constructor(
 
     private val batteryHeadRect: Rect = Rect()
 
-    private val chargingLogoPath: Path = Path()
-
     // Paints
     private val backgroundPaint: Paint = Paint(ANTI_ALIAS_FLAG)
 
@@ -219,8 +217,18 @@ class BatteryMeterView @JvmOverloads constructor(
     }
 
     private fun drawCurrentBatteryValueText(canvas: Canvas) {
+        val text = if (batteryLevel == 0) "Empty" else batteryLevel.toString()
         canvas.drawText(
-            batteryLevel.toString(),
+            text,
+            (contentWidth * 0.5).toFloat(),
+            (contentHeight * 0.7).toFloat(),
+            textValuePaint
+        )
+    }
+
+    private fun drawBatteryEmptyStatus(canvas: Canvas) {
+        canvas.drawText(
+            "Empty",
             (contentWidth * 0.5).toFloat(),
             (contentHeight * 0.7).toFloat(),
             textValuePaint
@@ -231,7 +239,8 @@ class BatteryMeterView @JvmOverloads constructor(
         val chargingLogoDrawable = VectorDrawableCompat.create(context.resources,
             R.drawable.ic_charging_bolt, null)?.apply {
             setBounds(backgroundRect.left + contentWidth/4, backgroundRect.top + contentHeight/4, backgroundRect.right - contentWidth/4, backgroundRect.bottom - contentHeight/4)
-            setColorFilter(chargingColor,PorterDuff.Mode.ADD)
+            setColorFilter(chargingColor,PorterDuff.Mode.SRC_IN   )
+
         }
         chargingLogoDrawable?.draw(canvas)
     }
@@ -240,14 +249,20 @@ class BatteryMeterView @JvmOverloads constructor(
         batteryLevelRect.set(
             backgroundRect.left + mainContentOffset,
             backgroundRect.top + mainContentOffset,
-            (backgroundRect.right - mainContentOffset) * this.batteryLevel / 100,
+            ((backgroundRect.right - mainContentOffset) * (this.batteryLevel.toDouble() / 100.toDouble())).toInt(),
             backgroundRect.bottom - mainContentOffset
         )
+
         if (batteryLevel <= warningLevel)
             batteryLevelPaint.color = warningColor
         else
             batteryLevelPaint.color = batteryLevelColor
-        canvas.drawRoundRect(RectF(batteryLevelRect),25f,25f, batteryLevelPaint)
+
+        if (batteryLevel == 0) {
+            drawBatteryEmptyStatus(canvas)
+        } else {
+            canvas.drawRoundRect(RectF(batteryLevelRect),25f,25f, batteryLevelPaint)
+        }
 
     }
 
