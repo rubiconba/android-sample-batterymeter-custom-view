@@ -192,20 +192,36 @@ class BatteryMeterView @JvmOverloads constructor(
         typedArray.recycle()
     }
 
-
-    override fun onDraw(canvas: Canvas) {
+    override fun onSizeChanged(width: Int, height: Int, oldw: Int, oldh: Int) {
         contentWidth = width - paddingLeft - paddingRight
         contentHeight = height - paddingTop - paddingBottom
         textValuePaint.textSize = contentHeight * TEXT_SIZE_RATIO
         batteryHeadWidth = (1f / 12f * contentWidth).toInt()
+        backgroundRect.set(
+            15,
+            15,
+            contentWidth - batteryHeadWidth - 15,
+            contentHeight - 15
+        )
+        batteryHeadRect.set(
+            backgroundRect.right + 20,
+            backgroundRect.top + contentHeight/4,
+            backgroundRect.left + contentWidth - 20,
+            backgroundRect.top + contentHeight*3/4
+        )
+        batteryLevelRect.set(
+            backgroundRect.left + mainContentOffset,
+            backgroundRect.top + mainContentOffset,
+            ((backgroundRect.right - mainContentOffset) * (this.batteryLevel.toDouble() / 100.toDouble())).toInt(),
+            backgroundRect.bottom - mainContentOffset
+        )
+    }
 
-
+    override fun onDraw(canvas: Canvas) {
         // Draw the background body of battery view
         drawBackground(canvas)
-
         // Draw the head of battery
         drawBatteryHead(canvas)
-
         // Draw the current battery level
         drawBatteryLevel(canvas)
 
@@ -216,43 +232,17 @@ class BatteryMeterView @JvmOverloads constructor(
         }
     }
 
-    private fun drawCurrentBatteryValueText(canvas: Canvas) {
-        val text = if (batteryLevel == 0) "Empty" else batteryLevel.toString()
-        canvas.drawText(
-            text,
-            (contentWidth * 0.5).toFloat(),
-            (contentHeight * 0.7).toFloat(),
-            textValuePaint
-        )
+    private fun drawBackground(canvas: Canvas) {
+        canvas.drawRect(backgroundRect, backgroundPaint)
+        canvas.drawRoundRect(RectF(backgroundRect),50f,50f, backgroundPaintStroke)
     }
 
-    private fun drawBatteryEmptyStatus(canvas: Canvas) {
-        canvas.drawText(
-            "Empty",
-            (contentWidth * 0.5).toFloat(),
-            (contentHeight * 0.7).toFloat(),
-            textValuePaint
-        )
-    }
-
-    private fun drawChargingLogo(canvas: Canvas) {
-        val chargingLogoDrawable = VectorDrawableCompat.create(context.resources,
-            R.drawable.ic_charging_bolt, null)?.apply {
-            setBounds(backgroundRect.left + contentWidth/4, backgroundRect.top + contentHeight/4, backgroundRect.right - contentWidth/4, backgroundRect.bottom - contentHeight/4)
-            setColorFilter(chargingColor,PorterDuff.Mode.SRC_IN   )
-
-        }
-        chargingLogoDrawable?.draw(canvas)
+    private fun drawBatteryHead(canvas: Canvas) {
+        // Draw the head of battery view
+        canvas.drawRoundRect(RectF(batteryHeadRect),10f,10f, batteryHeadPaint)
     }
 
     private fun drawBatteryLevel(canvas: Canvas) {
-        batteryLevelRect.set(
-            backgroundRect.left + mainContentOffset,
-            backgroundRect.top + mainContentOffset,
-            ((backgroundRect.right - mainContentOffset) * (this.batteryLevel.toDouble() / 100.toDouble())).toInt(),
-            backgroundRect.bottom - mainContentOffset
-        )
-
         if (batteryLevel <= warningLevel)
             batteryLevelPaint.color = warningColor
         else
@@ -263,29 +253,42 @@ class BatteryMeterView @JvmOverloads constructor(
         } else {
             canvas.drawRoundRect(RectF(batteryLevelRect),25f,25f, batteryLevelPaint)
         }
-
     }
 
-    private fun drawBatteryHead(canvas: Canvas) {
-        batteryHeadRect.set(
-            paddingLeft + contentWidth - batteryHeadWidth + mainContentOffset,
-            paddingTop + contentHeight/4,
-            paddingLeft + contentWidth,
-            paddingTop + contentHeight*3/4
-        )
-        // Draw the head of battery view
-        canvas.drawRoundRect(RectF(batteryHeadRect),10f,10f, batteryHeadPaint)
+    private fun drawChargingLogo(canvas: Canvas) {
+        VectorDrawableCompat.create(
+            context.resources,
+            R.drawable.ic_charging_bolt,
+            null
+        )?.apply {
+            setBounds(
+                backgroundRect.left + contentWidth/4,
+                backgroundRect.top + contentHeight/4,
+                backgroundRect.right - contentWidth/4,
+                backgroundRect.bottom - contentHeight/4
+            )
+            setColorFilter(chargingColor,PorterDuff.Mode.SRC_IN)
+            draw(canvas)
+        }
     }
 
-    private fun drawBackground(canvas: Canvas) {
-        backgroundRect.set(
-            paddingLeft + 10,
-            paddingTop + 10,
-            paddingLeft + contentWidth - batteryHeadWidth + 10,
-            paddingTop + contentHeight - 10
+    private fun drawCurrentBatteryValueText(canvas: Canvas) {
+        val text = if (batteryLevel == 0) "Empty" else batteryLevel.toString()
+        canvas.drawText(
+            text,
+            (contentWidth * 0.45).toFloat(),
+            (contentHeight * 0.7).toFloat(),
+            textValuePaint
         )
-        canvas.drawRect(backgroundRect, backgroundPaint)
-        canvas.drawRoundRect(RectF(backgroundRect),50f,50f, backgroundPaintStroke)
+    }
+
+    private fun drawBatteryEmptyStatus(canvas: Canvas) {
+        canvas.drawText(
+            "Empty",
+            (contentWidth * 0.45).toFloat(),
+            (contentHeight * 0.7).toFloat(),
+            textValuePaint
+        )
     }
 
     companion object {

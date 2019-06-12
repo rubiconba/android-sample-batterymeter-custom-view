@@ -9,10 +9,10 @@
         tools:context="ba.rubicon.batteryview.MainActivity">
 
     <ba.rubicon.widget.battery.BatteryMeterView
-            android:layout_width="292dp"
+            android:layout_width="264dp"
             android:id="@+id/battery_view"
-            android:layout_height="148dp"
-            app:battery_level="0"
+            android:layout_height="113dp"
+            app:battery_level="30"
             android:background="@android:color/transparent"
             app:normal_fill_color="@android:color/holo_green_dark"
             app:warning_fill_color="@android:color/darker_gray"
@@ -20,5 +20,5 @@
             app:charging_color="@android:color/holo_orange_dark"
             app:battery_head_color="@android:color/darker_gray"
             android:layout_gravity="center"
-            app:charging="false"/>
+            app:charging="true"/>
 </FrameLayout>
