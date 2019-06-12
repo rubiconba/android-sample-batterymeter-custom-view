@@ -284,7 +284,8 @@ class BatteryMeterView @JvmOverloads constructor(
             paddingLeft + contentWidth - batteryHeadWidth + 10,
             paddingTop + contentHeight - 10
         )
-        canvas.drawRect(backgroundRect, backgroundPaint)
+        //backgroundRect corners made rounded to avoid coming out of backgroundPaintStroke
+        canvas.drawRoundRect(RectF(backgroundRect),50f,50f, backgroundPaint)
         canvas.drawRoundRect(RectF(backgroundRect),50f,50f, backgroundPaintStroke)
     }
 
